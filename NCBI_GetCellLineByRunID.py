@@ -20,8 +20,12 @@ def main():
     for id in ids:
         keyResponse = GetKeyInfo(id)
         key = ParseKey(keyResponse)
-        traceResponse = GetTraceInfo(key)
-        cellLine = PasrseCellLine(traceResponse)
+        if key == None:
+            cellLine = 'No such ID'
+        else:
+            traceResponse = GetTraceInfo(key)
+            cellLine = PasrseCellLine(traceResponse)
+            
         cellLines.append(cellLine)
     
     with open('output.txt', 'w') as f:
@@ -43,7 +47,10 @@ def GetTraceInfo(key):
 def PasrseCellLine(traceResponse):
     pattern = "cell_line_s\":[ ]*\"(?P<cellline>[\S]+)\""
     m = re.search(pattern, traceResponse)
-    cellline = m.group('cellline')
+    if m == None:
+        cellline = 'no cell line'
+    else:
+        cellline = m.group('cellline')
     return(cellline)
 
 # DRR000212
@@ -58,7 +65,11 @@ def GetKeyInfo(DRR_id):
 def ParseKey(keyResponse):
     pattern = "key:\"(?P<key>[\S]+)\""
     m = re.search(pattern, keyResponse)
-    key = m.group('key')
+    if m == None:
+        key = None
+    else:
+        key = m.group('key')
+        
     return(key)
 
 
